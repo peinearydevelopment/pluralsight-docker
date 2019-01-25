@@ -1,0 +1,47 @@
+#RUN DOCKER SQL SERVER ON LINUX CONTAINER
+
+# https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility
+# https://github.com/hasankhan/sql-cli
+# http://thedatafarm.com/data-access/mashup-sql-server-on-linux-in-docker-on-a-mac-with-visual-studio-code/
+docker pull microsoft/mssql-server-linux
+
+# -e environment variable
+# -p port mapping
+# -d detached(allows us to get a prompt back in this terminal window)
+# --name specify name for container being created, if omitted, docker with create a name for you
+
+docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Test!234' -p 1433:1433 -d  --name pdsqllinux microsoft/mssql-server-linux
+
+# using sql-cli to connect to mssql in linux container(it is exposed as localhost)
+# command to startup
+# mssql -s localhost -p Test!234
+# .databases # lists databases on instance
+# .tables # lists tables on current database(master by default)
+
+# CREATE DATABASE FROM EXISTING .mdf FILE
+# USE master
+# GO
+# 
+# IF NOT EXISTS (
+#     SELECT name
+#     FROM sys.databases
+#     WHERE name = N'AdventureWorksLT'
+# )
+# CREATE DATABASE AdventureWorksLT
+# ON (FILENAME='C:\data\adventureworkslt.mdf')
+# FOR ATTACH
+# GO
+
+
+USE master
+GO
+
+IF NOT EXISTS (
+    SELECT name
+    FROM sys.databases
+    WHERE name = N'blog'
+)
+CREATE DATABASE Blog
+ON (FILENAME='/var/opt/mssql/Blog.mdf')
+FOR ATTACH
+GO

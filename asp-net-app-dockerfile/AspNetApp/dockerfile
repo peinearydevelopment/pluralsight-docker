@@ -1,0 +1,12 @@
+FROM microsoft/aspnetcore-build:latest
+
+MAINTAINER Peineary Development
+
+COPY . /app
+WORKDIR /app
+
+RUN ["dotnet", "restore"]
+
+EXPOSE 5000
+
+ENTRYPOINT ["dotnet", "run"]
